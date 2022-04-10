@@ -1,4 +1,7 @@
+import MainScene from "../..";
+
 class RotationController {
+  /** @param {MainScene} scene */
   constructor(scene, player) {
     this.scene = scene;
     this.player = player;
