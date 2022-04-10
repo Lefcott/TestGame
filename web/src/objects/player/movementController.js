@@ -1,7 +1,7 @@
-import MainScene from "../..";
+import Player from ".";
 
 class MovementController {
-  /** @param {MainScene} scene */
+  /** @param {Player} player */
   constructor(player) {
     this.player = player;
   }
