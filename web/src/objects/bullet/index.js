@@ -27,6 +27,7 @@ class Bullet extends Phaser.GameObjects.Sprite {
     );
     this.body.setVelocityX(speed * Math.cos(direction));
     this.body.setVelocityY(speed * Math.sin(direction));
+    this.scene.gunSound.play();
   }
   setDestroyEvent() {
     this.scene.time.addEvent({

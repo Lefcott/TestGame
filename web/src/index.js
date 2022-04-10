@@ -14,11 +14,13 @@ class MainScene extends Phaser.Scene {
     this.load.image("background", backgroundImg);
     this.load.image("player", playerImg);
     this.load.image("bullet", bulletImg);
+    this.load.audio("gun", "sounds/gun.wav");
   }
 
   create() {
     this.background = new Background(this);
     this.player = new Player(this);
+    this.gunSound = this.sound.add("gun");
   }
 
   update() {
