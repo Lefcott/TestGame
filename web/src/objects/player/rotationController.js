@@ -2,8 +2,7 @@ import MainScene from "../..";
 
 class RotationController {
   /** @param {MainScene} scene */
-  constructor(scene, player) {
-    this.scene = scene;
+  constructor(player) {
     this.player = player;
   }
 
@@ -12,7 +11,7 @@ class RotationController {
     this.player.setRotation(rotation);
   }
   getRotationToPointer() {
-    const pointer = this.scene.input.activePointer;
+    const pointer = this.player.scene.input.activePointer;
     const angle = Phaser.Math.Angle.Between(
       this.player.x,
       this.player.y,

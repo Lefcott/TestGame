@@ -13,8 +13,8 @@ class Player extends Phaser.GameObjects.Sprite {
       "player"
     );
     this.scene = scene;
-    this.movementController = new MovementController(scene, this);
-    this.rotationController = new RotationController(scene, this);
+    this.movementController = new MovementController(this);
+    this.rotationController = new RotationController(this);
     this.fireController = new FireController(this);
     this.scale = 0.32;
     this.scene.add.existing(this);
