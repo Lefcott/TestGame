@@ -14,6 +14,7 @@ class Background extends Phaser.GameObjects.TileSprite {
       height,
       "background"
     );
+    this.alpha = 0.8;
     this.minX = scene.game.canvas.width / 2 - width / 2;
     this.minY = scene.game.canvas.height / 2 - height / 2;
     this.maxX = scene.game.canvas.width / 2 + width / 2;

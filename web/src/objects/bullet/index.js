@@ -1,6 +1,6 @@
 import MainScene from "../..";
 
-const speed = 1400;
+const speed = 1000;
 
 class Bullet extends Phaser.GameObjects.Sprite {
   /** @param {MainScene} scene */

@@ -5,6 +5,10 @@ class RotationController {
   }
 
   rotateToPointer() {
+    const rotation = this.getRotationToPointer();
+    this.player.setRotation(rotation);
+  }
+  getRotationToPointer() {
     const pointer = this.scene.input.activePointer;
     const angle = Phaser.Math.Angle.Between(
       this.player.x,
@@ -12,7 +16,7 @@ class RotationController {
       pointer.x,
       pointer.y
     );
-    this.player.setRotation(angle + Math.PI / 2);
+    return angle + Math.PI / 2;
   }
   update() {
     this.rotateToPointer();
