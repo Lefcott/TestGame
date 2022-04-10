@@ -1,18 +1,9 @@
-import MainScene from "..";
-
-class Player extends Phaser.GameObjects.Sprite {
-  /** @param {MainScene} scene */
-  constructor(scene) {
-    super(
-      scene,
-      scene.game.canvas.width / 2,
-      scene.game.canvas.height / 2,
-      "player"
-    );
+class MovementController {
+  constructor(scene, player) {
     this.scene = scene;
-    this.scale = 0.32;
-    this.scene.add.existing(this);
+    this.player = player;
   }
+
   checkMovements() {
     if (this.scene.input.keyboard.addKey("W").isDown) this.moveUp();
     if (this.scene.input.keyboard.addKey("A").isDown) this.moveLeft();
@@ -31,20 +22,9 @@ class Player extends Phaser.GameObjects.Sprite {
   moveDown() {
     this.scene.background.moveUp();
   }
-  rotateToPointer() {
-    const pointer = this.scene.input.activePointer;
-    const angle = Phaser.Math.Angle.Between(
-      this.x,
-      this.y,
-      pointer.x,
-      pointer.y
-    );
-    this.setRotation(angle + Math.PI / 2);
-  }
   update() {
-    this.rotateToPointer();
     this.checkMovements();
   }
 }
 
-export default Player;
+export default MovementController;
