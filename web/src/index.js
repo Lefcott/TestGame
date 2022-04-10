@@ -1,6 +1,7 @@
 import Phaser from "phaser";
 import backgroundImg from "./assets/background.jpeg";
 import playerImg from "./assets/player.png";
+import bulletImg from "./assets/bullet.png";
 import Background from "./objects/background";
 import Player from "./objects/player";
 
@@ -12,6 +13,7 @@ class MainScene extends Phaser.Scene {
   preload() {
     this.load.image("background", backgroundImg);
     this.load.image("player", playerImg);
+    this.load.image("bullet", bulletImg);
   }
 
   create() {
@@ -29,6 +31,7 @@ const config = {
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
+  physics: { default: "arcade" },
   parent: "phaser-example",
   scene: MainScene,
 };
