@@ -2,6 +2,8 @@ import Phaser from "phaser";
 import backgroundImg from "./assets/background.jpeg";
 import playerImg from "./assets/player.png";
 import bulletImg from "./assets/bullet.png";
+import gunSound from "./assets/sounds/gun.wav";
+import footstepsSound from "./assets/sounds/footsteps.mp3";
 import Background from "./objects/background";
 import Player from "./objects/player";
 
@@ -14,8 +16,8 @@ class MainScene extends Phaser.Scene {
     this.load.image("background", backgroundImg);
     this.load.image("player", playerImg);
     this.load.image("bullet", bulletImg);
-    this.load.audio("gun", "sounds/gun.wav");
-    this.load.audio("footsteps", "sounds/footsteps.mp3");
+    this.load.audio("gun", gunSound);
+    this.load.audio("footsteps", footstepsSound);
   }
 
   create() {
