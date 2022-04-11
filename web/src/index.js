@@ -5,6 +5,7 @@ import bulletImg from "./assets/bullet.png";
 import gunSound from "./assets/sounds/gun.wav";
 import footstepsSound from "./assets/sounds/footsteps.mp3";
 import Background from "./objects/background";
+import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
 
 class MainScene extends Phaser.Scene {
@@ -25,6 +26,7 @@ class MainScene extends Phaser.Scene {
     this.player = new Player(this);
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
+    this.eventListener = new EventManager(this);
   }
 
   update() {

@@ -1,3 +1,4 @@
+import { v4 as uuid } from "uuid";
 import MainScene from "../..";
 import MovementController from "./movementController";
 import RotationController from "./rotationController";
@@ -12,6 +13,7 @@ class Player extends Phaser.GameObjects.Sprite {
       scene.game.canvas.height / 2,
       "player"
     );
+    this.id = uuid();
     this.scene = scene;
     this.movementController = new MovementController(this);
     this.rotationController = new RotationController(this);
