@@ -7,6 +7,7 @@ import footstepsSound from "./assets/sounds/footsteps.mp3";
 import Background from "./objects/background";
 import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
+import RemotePlayer from "./objects/remotePlayer";
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -24,6 +25,8 @@ class MainScene extends Phaser.Scene {
   create() {
     this.background = new Background(this);
     this.player = new Player(this);
+    /** @type {RemotePlayer[]} */
+    this.remotePlayers = [];
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
     this.eventListener = new EventManager(this);
