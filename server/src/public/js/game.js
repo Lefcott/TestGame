@@ -33,7 +33,6 @@ function create() {
 function update() {}
 
 function displayPlayers(self, playerInfo, sprite) {
-  console.log("displayPlayers");
   const player = self.add
     .sprite(playerInfo.x, playerInfo.y, sprite)
     .setOrigin(0.5, 0.5)
