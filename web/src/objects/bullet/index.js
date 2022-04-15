@@ -1,6 +1,6 @@
 import MainScene from "../..";
 
-const speed = 1000;
+const speed = 1500;
 
 class Bullet extends Phaser.GameObjects.Sprite {
   /** @param {MainScene} scene */
@@ -17,11 +17,16 @@ class Bullet extends Phaser.GameObjects.Sprite {
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
     this.rotation =
-      Phaser.Math.Angle.Between(this.x, this.y, pointer.x, pointer.y) +
+      Phaser.Math.Angle.Between(
+        this.x - this.scene.cameras.main.scrollX,
+        this.y - this.scene.cameras.main.scrollY,
+        pointer.x,
+        pointer.y
+      ) +
       Math.PI / 2;
     const direction = Phaser.Math.Angle.Between(
-      this.x,
-      this.y,
+      this.x - this.scene.cameras.main.scrollX,
+      this.y - this.scene.cameras.main.scrollY,
       pointer.x,
       pointer.y
     );

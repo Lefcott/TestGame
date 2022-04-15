@@ -23,7 +23,8 @@ class Player extends Phaser.GameObjects.Sprite {
   }
 
   setProperties(data) {
-    this.scene.background.setCoords(data.x, data.y);
+    this.x = data.x;
+    this.y = data.y;
     this.rotation = data.rotation;
     this.scale = data.scale;
   }

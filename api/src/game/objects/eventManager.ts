@@ -40,7 +40,7 @@ class EventManager {
     };
 
     this.scene.addPlayer(data);
-    socket.emit("playerUpdated", data);
+    gameSocket.emit("playerJoined", data);
   }
 }
 

@@ -11,16 +11,25 @@ class EventManager {
   }
 
   addEventListeners() {
-    gameSocket.on("playerJoined", this.addRemotePlayer.bind(this));
-    gameSocket.on("playerUpdated", this.setPlayerProperties.bind(this));
+    gameSocket.on("playerJoined", this.handlePlayerCreated.bind(this));
+    gameSocket.on("playerUpdated", this.handlePlayerUpdated.bind(this));
   }
-  setPlayerProperties(data) {
+
+  handlePlayerCreated(data) {
+    if (data.id === gameSocket.id) {
+      this.scene.player.setProperties(data);
+    } else {
+      this.addRemotePlayer(data);
+    }
+  }
+
+  handlePlayerUpdated(data) {
     if (data.id === gameSocket.id) {
       this.scene.player.setProperties(data);
     }
   }
+
   addRemotePlayer(data) {
-    if (data.id === this.scene.player.id) return;
     this.scene.remotePlayers.push(
       new RemotePlayer(
         this.scene,

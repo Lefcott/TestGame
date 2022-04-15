@@ -30,6 +30,7 @@ class MainScene extends Phaser.Scene {
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
     this.eventListener = new EventManager(this);
+    this.cameras.main.startFollow(this.player, false, 0.09, 0.09);
   }
 
   update() {

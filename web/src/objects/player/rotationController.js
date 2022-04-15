@@ -13,8 +13,8 @@ class RotationController {
   getRotationToPointer() {
     const pointer = this.player.scene.input.activePointer;
     const angle = Phaser.Math.Angle.Between(
-      this.player.x,
-      this.player.y,
+      this.player.x - this.player.scene.cameras.main.scrollX,
+      this.player.y - this.player.scene.cameras.main.scrollY,
       pointer.x,
       pointer.y
     );
