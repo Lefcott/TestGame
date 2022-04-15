@@ -36,6 +36,21 @@ class MainScene extends Phaser.Scene {
   update() {
     this.player.update();
   }
+
+  removePlayer(id) {
+    const player = this.getPlayerById(id);
+
+    if (player) {
+      player.destroy();
+      this.remotePlayers = this.remotePlayers.filter(
+        (player) => player.id !== id
+      );
+    }
+  }
+
+  getPlayerById(id) {
+    return this.remotePlayers.find((player) => player.id === id);
+  }
 }
 
 const config = {

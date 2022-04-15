@@ -4,6 +4,7 @@ import path from "path";
 import { PlayerData } from "src/types/core";
 import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
+import { gameSocket } from "src/server";
 
 class MainScene extends Phaser.Scene {
   eventManager?: EventManager;
@@ -29,8 +30,17 @@ class MainScene extends Phaser.Scene {
   }
 
   addPlayer(playerData: PlayerData) {
-    console.log("adding player", playerData);
     this.players.push(new Player(this, playerData));
+  }
+
+  removePlayer(id: string) {
+    const player = this.getPlayerById(id);
+    if (player) {
+      player.destroy();
+      this.players = this.players.filter((player) => player.id !== id);
+
+      gameSocket.emit("playerLeft", { id });
+    }
   }
 
   getPlayerById(id: string) {

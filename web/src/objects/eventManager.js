@@ -12,6 +12,7 @@ class EventManager {
 
   addEventListeners() {
     gameSocket.on("playerJoined", this.handlePlayerCreated.bind(this));
+    gameSocket.on("playerLeft", this.handlePlayerLeft.bind(this));
     gameSocket.on("playerUpdated", this.handlePlayerUpdated.bind(this));
   }
 
@@ -21,6 +22,10 @@ class EventManager {
     } else {
       this.addRemotePlayer(data);
     }
+  }
+
+  handlePlayerLeft(data) {
+    this.scene.removePlayer(data.id);
   }
 
   handlePlayerUpdated(data) {

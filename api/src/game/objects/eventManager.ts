@@ -16,10 +16,15 @@ class EventManager {
       console.log("new connection!");
 
       this.joinGame(socket);
+
       socket.on(
         "playerInputUpdated",
         this.handlePlayerInputUpdated.bind(this, socket)
       );
+
+      socket.on("disconnect", () => {
+        this.scene.removePlayer(socket.id);
+      });
     });
   }
 
