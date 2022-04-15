@@ -24,9 +24,11 @@
     "typescript": "^4.6.3"
   },
   "dependencies": {
+    "@geckos.io/phaser-on-nodejs": "^1.2.7",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "module-alias": "^2.2.2",
+    "phaser": "^3.55.2",
     "socket.io": "^4.4.1",
     "source-map-support": "^0.5.21"
   },

@@ -22,6 +22,11 @@ class Player extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
   }
 
+  setProperties(data) {
+    this.scene.background.setCoords(data.x, data.y);
+    this.rotation = data.rotation;
+    this.scale = data.scale;
+  }
   update() {
     this.rotationController.update();
     this.movementController.update();

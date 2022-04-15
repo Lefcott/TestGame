@@ -21,25 +21,9 @@ class Background extends Phaser.GameObjects.TileSprite {
     this.maxY = scene.game.canvas.height / 2 + height / 2;
     scene.add.existing(this);
   }
-  moveLeft() {
-    if (this.x - 10 >= this.minX) {
-      this.x -= 10;
-    }
-  }
-  moveRight() {
-    if (this.x + 10 <= this.maxX) {
-      this.x += 10;
-    }
-  }
-  moveUp() {
-    if (this.y - 10 >= this.minY) {
-      this.y -= 10;
-    }
-  }
-  moveDown() {
-    if (this.y + 10 <= this.maxY) {
-      this.y += 10;
-    }
+  setCoords(x, y) {
+    this.x = this.maxX - x;
+    this.y = this.maxY - y;
   }
 }
 

@@ -7,22 +7,17 @@ class EventManager {
   constructor(scene) {
     this.scene = scene;
     this.addEventListeners();
-    this.joinGame();
+    gameSocket.connect();
   }
 
   addEventListeners() {
     gameSocket.on("playerJoined", this.addRemotePlayer.bind(this));
+    gameSocket.on("playerUpdated", this.setPlayerProperties.bind(this));
   }
-  joinGame() {
-    gameSocket.emit("joinGame", {
-      player: {
-        id: this.scene.player.id,
-        scale: this.scene.player.scale,
-        rotation: this.scene.player.rotation,
-        x: this.scene.player.x,
-        y: this.scene.player.y,
-      },
-    });
+  setPlayerProperties(data) {
+    if (data.id === gameSocket.id) {
+      this.scene.player.setProperties(data);
+    }
   }
   addRemotePlayer(data) {
     if (data.id === this.scene.player.id) return;

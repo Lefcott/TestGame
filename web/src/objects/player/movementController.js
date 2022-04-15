@@ -1,16 +1,34 @@
 import Player from ".";
+import gameSocket from "../../utils/socket";
 
 class MovementController {
   /** @param {Player} player */
   constructor(player) {
     this.player = player;
+    this.input = {
+      w: false,
+      a: false,
+      s: false,
+      d: false,
+    };
   }
 
   checkMovements() {
-    if (this.player.scene.input.keyboard.addKey("W").isDown) this.moveUp();
-    if (this.player.scene.input.keyboard.addKey("A").isDown) this.moveLeft();
-    if (this.player.scene.input.keyboard.addKey("S").isDown) this.moveDown();
-    if (this.player.scene.input.keyboard.addKey("D").isDown) this.moveRight();
+    const previousInput = { ...this.input };
+
+    this.input.w = this.player.scene.input.keyboard.addKey("W").isDown;
+    this.input.a = this.player.scene.input.keyboard.addKey("A").isDown;
+    this.input.s = this.player.scene.input.keyboard.addKey("S").isDown;
+    this.input.d = this.player.scene.input.keyboard.addKey("D").isDown;
+
+    if (
+      previousInput.w !== this.input.w ||
+      previousInput.a !== this.input.a ||
+      previousInput.s !== this.input.s ||
+      previousInput.d !== this.input.d
+    ) {
+      gameSocket.emit("playerInputUpdated", this.input);
+    }
   }
   isMoving() {
     return (
@@ -19,18 +37,6 @@ class MovementController {
       this.player.scene.input.keyboard.addKey("S").isDown ||
       this.player.scene.input.keyboard.addKey("D").isDown
     );
-  }
-  moveLeft() {
-    this.player.scene.background.moveRight();
-  }
-  moveRight() {
-    this.player.scene.background.moveLeft();
-  }
-  moveUp() {
-    this.player.scene.background.moveDown();
-  }
-  moveDown() {
-    this.player.scene.background.moveUp();
   }
   playFootstepsSound() {
     if (this.isMoving() && !this.player.scene.footstepsSound.isPlaying) {
