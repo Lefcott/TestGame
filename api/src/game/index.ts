@@ -5,10 +5,12 @@ import { PlayerData } from "src/types/core";
 import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
 import { gameSocket } from "src/server";
+import Bullet from "./objects/bullet";
 
 class MainScene extends Phaser.Scene {
   eventManager?: EventManager;
   players: Player[] = [];
+  bullets: Bullet[] = [];
 
   constructor() {
     super("MainScene");

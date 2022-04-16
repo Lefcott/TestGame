@@ -1,4 +1,6 @@
+import { v4 as uuid } from "uuid";
 import Player from ".";
+import gameSocket from "../../utils/socket";
 import Bullet from "../bullet";
 
 const gunCoords = [
@@ -16,9 +18,35 @@ class FireController {
   addFireEvent() {
     this.player.scene.input.on("pointerdown", () => {
       const coords = this.getGunCoords();
-      new Bullet(this.player.scene, coords.x, coords.y);
+      const direction = Phaser.Math.Angle.Between(
+        coords.x - this.player.scene.cameras.main.scrollX,
+        coords.y - this.player.scene.cameras.main.scrollY,
+        this.player.scene.input.activePointer.x,
+        this.player.scene.input.activePointer.y
+      );
+      const bulletId = uuid();
+
+      gameSocket.emit(
+        "createShot",
+        {
+          id: bulletId,
+          x: coords.x,
+          y: coords.y,
+          direction,
+        },
+        () => {
+          new Bullet(
+            this.player.scene,
+            bulletId,
+            coords.x,
+            coords.y,
+            direction
+          );
+        }
+      );
     });
   }
+
   getGunCoords() {
     const angle = this.player.rotation;
     const randomCordIndex = Math.floor(Math.random() * 2);

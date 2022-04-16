@@ -1,6 +1,7 @@
 import gameSocket from "../utils/socket";
 import MainScene from "..";
 import RemotePlayer from "./remotePlayer";
+import Bullet from "./bullet";
 
 class EventManager {
   /** @param {MainScene} scene */
@@ -19,6 +20,7 @@ class EventManager {
       "playerRotationUpdated",
       this.handlePlayerRotationUpdated.bind(this)
     );
+    gameSocket.on("shotCreated", this.handleShotCreated.bind(this));
   }
 
   handlePlayerList(data) {
@@ -51,6 +53,12 @@ class EventManager {
     if (remotePlayer) {
       remotePlayer.rotation = data.rotation;
     }
+  }
+
+  handleShotCreated(data) {
+    this.scene.bullets.push(
+      new Bullet(this.scene, data.id, data.x, data.y, data.direction)
+    );
   }
 
   addRemotePlayer(data) {

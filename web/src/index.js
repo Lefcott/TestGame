@@ -8,6 +8,7 @@ import Background from "./objects/background";
 import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
 import RemotePlayer from "./objects/remotePlayer";
+import Bullet from "./objects/bullet";
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -27,6 +28,8 @@ class MainScene extends Phaser.Scene {
     this.player = new Player(this);
     /** @type {RemotePlayer[]} */
     this.remotePlayers = [];
+    /** @type {Bullet[]} */
+    this.bullets = [];
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
     this.eventListener = new EventManager(this);

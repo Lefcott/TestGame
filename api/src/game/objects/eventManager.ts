@@ -1,7 +1,8 @@
 import { Socket } from "socket.io";
 import { gameSocket } from "src/server";
-import { PlayerData, PlayerInput } from "src/types/core";
+import { PlayerData, PlayerInput, Shot } from "src/types/core";
 import MainScene from "..";
+import Bullet from "./bullet";
 
 class EventManager {
   scene: MainScene;
@@ -27,6 +28,8 @@ class EventManager {
         this.handleRotationUpdated.bind(this, socket)
       );
 
+      socket.on("createShot", this.hanndleCreateShot.bind(this, socket));
+
       socket.on("disconnect", () => {
         this.scene.removePlayer(socket.id);
       });
@@ -51,6 +54,12 @@ class EventManager {
         rotation: input,
       });
     }
+  }
+
+  hanndleCreateShot(socket: Socket, input: Shot, callback: Function) {
+    this.scene.bullets.push(new Bullet(this.scene, socket.id, input));
+    callback();
+    socket.broadcast.emit("shotCreated", input);
   }
 
   joinGame(socket: Socket) {

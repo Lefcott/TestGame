@@ -4,40 +4,28 @@ const speed = 1500;
 
 class Bullet extends Phaser.GameObjects.Sprite {
   /** @param {MainScene} scene */
-  constructor(scene, x, y) {
+  constructor(scene, id, x, y, direction) {
     super(scene, x, y, "bullet");
     this.scene = scene;
+    this.id = id;
     this.scale = 0.1;
+    this.direction = direction;
     this.fire();
     this.setDestroyEvent();
   }
   fire() {
-    const pointer = this.scene.input.activePointer;
-
     this.scene.physics.world.enable(this);
     this.scene.add.existing(this);
-    this.rotation =
-      Phaser.Math.Angle.Between(
-        this.x - this.scene.cameras.main.scrollX,
-        this.y - this.scene.cameras.main.scrollY,
-        pointer.x,
-        pointer.y
-      ) +
-      Math.PI / 2;
-    const direction = Phaser.Math.Angle.Between(
-      this.x - this.scene.cameras.main.scrollX,
-      this.y - this.scene.cameras.main.scrollY,
-      pointer.x,
-      pointer.y
-    );
-    this.body.setVelocityX(speed * Math.cos(direction));
-    this.body.setVelocityY(speed * Math.sin(direction));
+    this.rotation = this.direction + Math.PI / 2;
+    this.body.setVelocityX(speed * Math.cos(this.direction));
+    this.body.setVelocityY(speed * Math.sin(this.direction));
     this.scene.gunSound.play();
   }
   setDestroyEvent() {
     this.scene.time.addEvent({
       delay: 10000,
       callback: () => {
+        this.scene.bullets = this.scene.bullets.filter((x) => x.id !== this.id);
         this.destroy();
       },
     });

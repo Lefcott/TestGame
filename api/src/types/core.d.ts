@@ -12,3 +12,10 @@ export type PlayerInput = {
   s: boolean;
   d: boolean;
 };
+
+export type Shot = {
+  id: string;
+  x: number;
+  y: number;
+  direction: number;
+};
