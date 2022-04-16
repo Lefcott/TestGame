@@ -28,6 +28,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.rotation = data.rotation;
     this.scale = data.scale;
   }
+
   update() {
     this.rotationController.update();
     this.movementController.update();

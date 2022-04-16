@@ -36,7 +36,7 @@ class EventManager {
   }
 
   joinGame(socket: Socket) {
-    const data: PlayerData = {
+    const playerData: PlayerData = {
       id: socket.id,
       x: 0,
       y: 0,
@@ -44,8 +44,19 @@ class EventManager {
       scale: 0.32,
     };
 
-    this.scene.addPlayer(data);
-    gameSocket.emit("playerJoined", data);
+    gameSocket.emit("playerJoined", playerData);
+
+    socket.emit(
+      "playerList",
+      this.scene.players.map((player) => ({
+        id: player.id,
+        x: player.x,
+        y: player.y,
+        rotation: player.rotation,
+        scale: player.scale,
+      })) as PlayerData[]
+    );
+    this.scene.addPlayer(playerData);
   }
 }
 

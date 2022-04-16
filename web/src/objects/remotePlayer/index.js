@@ -12,6 +12,13 @@ class RemotePlayer extends Phaser.GameObjects.Sprite {
   }
 
   update() {}
+
+  setProperties(data) {
+    this.x = data.x;
+    this.y = data.y;
+    this.rotation = data.rotation;
+    this.scale = data.scale;
+  }
 }
 
 export default RemotePlayer;
