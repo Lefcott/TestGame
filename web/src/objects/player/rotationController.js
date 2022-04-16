@@ -1,4 +1,5 @@
 import Player from ".";
+import gameSocket from "../../utils/socket";
 
 class RotationController {
   /** @param {Player} player */
@@ -7,8 +8,13 @@ class RotationController {
   }
 
   rotateToPointer() {
-    const rotation = this.getRotationToPointer();
-    this.player.setRotation(rotation);
+    const newRotation = this.getRotationToPointer();
+
+    if (newRotation.toFixed(2) !== this.player.rotation.toFixed(2)) {
+      gameSocket.emit("rotationUpdated", newRotation, () => {
+        this.player.setRotation(newRotation);
+      });
+    }
   }
   getRotationToPointer() {
     const pointer = this.player.scene.input.activePointer;

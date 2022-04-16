@@ -18,8 +18,13 @@ class EventManager {
       this.joinGame(socket);
 
       socket.on(
-        "playerInputUpdated",
+        "inputUpdated",
         this.handlePlayerInputUpdated.bind(this, socket)
+      );
+
+      socket.on(
+        "rotationUpdated",
+        this.handleRotationUpdated.bind(this, socket)
       );
 
       socket.on("disconnect", () => {
@@ -32,6 +37,19 @@ class EventManager {
     const player = this.scene.getPlayerById(socket.id);
     if (player) {
       player.setInput(input);
+    }
+  }
+
+  handleRotationUpdated(socket: Socket, input: number, callback: Function) {
+    const player = this.scene.getPlayerById(socket.id);
+
+    if (player) {
+      player.rotation = input;
+      callback();
+      socket.broadcast.emit("playerRotationUpdated", {
+        playerId: socket.id,
+        rotation: input,
+      });
     }
   }
 

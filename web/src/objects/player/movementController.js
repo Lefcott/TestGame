@@ -27,7 +27,7 @@ class MovementController {
       previousInput.s !== this.input.s ||
       previousInput.d !== this.input.d
     ) {
-      gameSocket.emit("playerInputUpdated", this.input);
+      gameSocket.emit("inputUpdated", this.input);
     }
   }
   isMoving() {

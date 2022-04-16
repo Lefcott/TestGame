@@ -15,10 +15,13 @@ class EventManager {
     gameSocket.on("playerLeft", this.handlePlayerLeft.bind(this));
     gameSocket.on("playerUpdated", this.handlePlayerUpdated.bind(this));
     gameSocket.on("playerList", this.handlePlayerList.bind(this));
+    gameSocket.on(
+      "playerRotationUpdated",
+      this.handlePlayerRotationUpdated.bind(this)
+    );
   }
 
   handlePlayerList(data) {
-    console.log("player list", data);
     data.forEach(this.addRemotePlayer.bind(this));
   }
 
@@ -40,6 +43,13 @@ class EventManager {
     } else {
       const remotePlayer = this.scene.getPlayerById(data.id);
       remotePlayer.setProperties(data);
+    }
+  }
+
+  handlePlayerRotationUpdated(data) {
+    const remotePlayer = this.scene.getPlayerById(data.playerId);
+    if (remotePlayer) {
+      remotePlayer.rotation = data.rotation;
     }
   }
 
