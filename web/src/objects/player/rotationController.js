@@ -11,8 +11,10 @@ class RotationController {
     const newRotation = this.getRotationToPointer();
 
     if (newRotation.toFixed(2) !== this.player.rotation.toFixed(2)) {
+      const timestamp = +new Date();
       gameSocket.emit("rotationUpdated", newRotation, () => {
         this.player.setRotation(newRotation);
+        this.player.scene.ping.updatePing(+new Date() - timestamp);
       });
     }
   }
