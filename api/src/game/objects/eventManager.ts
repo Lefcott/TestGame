@@ -30,6 +30,8 @@ class EventManager {
 
       socket.on("createShot", this.hanndleCreateShot.bind(this, socket));
 
+      socket.on("ping", this.handlePing.bind(this, socket));
+
       socket.on("disconnect", () => {
         this.scene.removePlayer(socket.id);
       });
@@ -84,6 +86,10 @@ class EventManager {
       })) as PlayerData[]
     );
     this.scene.addPlayer(playerData);
+  }
+
+  handlePing(socket: Socket, callback: Function) {
+    callback();
   }
 }
 
