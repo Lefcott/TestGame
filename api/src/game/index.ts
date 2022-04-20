@@ -59,6 +59,7 @@ new Phaser.Game({
   width: 1280,
   height: 720,
   banner: false,
+  fps: { target: 30 },
   audio: { noAudio: true },
   scene: [MainScene],
   physics: { default: "arcade" },

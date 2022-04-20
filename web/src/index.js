@@ -63,11 +63,12 @@ const config = {
   scale: {
     mode: Phaser.Scale.RESIZE,
   },
+  fps: { target: 30 },
   physics: { default: "arcade" },
   parent: "phaser-example",
   scene: MainScene,
 };
 
-const game = new Phaser.Game(config);
+const game = new Phaser.Game();
 
 export default MainScene;
