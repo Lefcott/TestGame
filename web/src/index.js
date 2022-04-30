@@ -69,6 +69,6 @@ const config = {
   scene: MainScene,
 };
 
-const game = new Phaser.Game();
+const game = new Phaser.Game(config);
 
 export default MainScene;
