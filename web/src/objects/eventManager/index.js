@@ -2,14 +2,12 @@ import gameSocket from "../../utils/socket";
 import MainScene from "../..";
 import RemotePlayer from "../remotePlayer";
 import Bullet from "../bullet";
-import DirectConnection from "./directConnection";
 
 class EventManager {
   /** @param {MainScene} scene */
   constructor(scene) {
     this.scene = scene;
     this.scene.player.id = gameSocket.id;
-    this.directConnection = new DirectConnection(scene);
     this.addEventListeners();
     gameSocket.connect();
   }
@@ -38,20 +36,20 @@ class EventManager {
   handleMasterUserUpdated(masterUser) {
     this.scene.masterUser = masterUser;
     if (!this.scene.player.isMaster()) {
-      this.directConnection.connectToMasterUser();
+      this.scene.directConnection.connectToMasterUser();
     }
   }
 
   handleOffer(data) {
-    this.directConnection.onOffer(data.userId, data.offer);
+    this.scene.directConnection.onOffer(data.userId, data.offer);
   }
 
   handleAnswer(answer) {
-    this.directConnection.onAnswer(answer);
+    this.scene.directConnection.onAnswer(answer);
   }
 
   handleCandidate(candidate) {
-    this.directConnection.onCandidate(candidate);
+    this.scene.directConnection.onCandidate(candidate);
   }
 
   handlePlayerList(data) {

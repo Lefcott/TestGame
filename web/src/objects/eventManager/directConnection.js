@@ -31,7 +31,7 @@ class DirectConnection {
     };
     this.connection.ondatachannel = (event) => {
       event.channel.onmessage = (messageEvent) => {
-        console.log("messageEvent", messageEvent);
+        console.log("messageEvent", messageEvent.data);
       };
     };
   }
