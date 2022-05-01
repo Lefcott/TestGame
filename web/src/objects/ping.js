@@ -12,13 +12,13 @@ class Ping extends Phaser.GameObjects.Text {
   }
 
   updatePing() {
-    setInterval(() => {
-      const timestamp = +new Date();
-      gameSocket.emit("ping", () => {
-        const newPing = +new Date() - timestamp;
-        this.text = `Ping: ${newPing}`;
-      });
-    }, 500);
+    // setInterval(() => {
+    //   const timestamp = +new Date();
+    //   gameSocket.emit("ping", () => {
+    //     const newPing = +new Date() - timestamp;
+    //     this.text = `Ping: ${newPing}`;
+    //   });
+    // }, 500);
   }
 }
 

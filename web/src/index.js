@@ -31,6 +31,7 @@ class MainScene extends Phaser.Scene {
     this.remotePlayers = [];
     /** @type {Bullet[]} */
     this.bullets = [];
+    this.masterUser = "";
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
     this.eventListener = new EventManager(this);

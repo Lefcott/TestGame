@@ -13,7 +13,7 @@ class Player extends Phaser.GameObjects.Sprite {
       scene.game.canvas.height / 2,
       "player"
     );
-    this.id = uuid();
+    this.id = null;
     this.scene = scene;
     this.movementController = new MovementController(this);
     this.rotationController = new RotationController(this);
@@ -27,6 +27,10 @@ class Player extends Phaser.GameObjects.Sprite {
     this.y = data.y;
     this.rotation = data.rotation;
     this.scale = data.scale;
+  }
+
+  isMaster() {
+    return this.scene.masterUser === this.id;
   }
 
   update() {
