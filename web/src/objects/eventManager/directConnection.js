@@ -10,6 +10,7 @@ class DirectConnection {
     this.dataChannel = this.createDataChannel();
     // TODO this is not totally ok since there will be more users
     this.connectedUser = null;
+    this.events = {};
   }
 
   /** @returns {RTCPeerConnection} */
@@ -29,9 +30,11 @@ class DirectConnection {
         });
       }
     };
-    this.connection.ondatachannel = (event) => {
-      event.channel.onmessage = (messageEvent) => {
-        console.log("messageEvent", messageEvent.data);
+    this.connection.ondatachannel = (ev) => {
+      ev.channel.onmessage = (messageEvent) => {
+        const { event, data } = JSON.parse(messageEvent.data);
+        console.log("messageEvent", event, data);
+        this.receiveEvent(event, data);
       };
     };
   }
@@ -90,10 +93,26 @@ class DirectConnection {
 
     dataChannel.onopen = () => {
       console.log("data channel", dataChannel);
-      dataChannel.send("test message!");
     };
 
     return dataChannel;
+  }
+
+  send(event, data) {
+    this.dataChannel.send(JSON.stringify({ event, data }));
+  }
+
+  on(event, callback) {
+    if (!this.events[event]) {
+      this.events[event] = [];
+    }
+    this.events[event].push(callback);
+  }
+
+  receiveEvent(event, data) {
+    if (this.events[event]) {
+      this.events[event].forEach((callback) => callback(data));
+    }
   }
 }
 
