@@ -5,24 +5,21 @@ class DirectConnection {
   /** @param {MainScene} scene */
   constructor(scene) {
     this.scene = scene;
-    this.connection = this.createConnection();
-    this.setupConnection();
-    this.dataChannel = this.createDataChannel();
-    // TODO this is not totally ok since there will be more users
-    this.connectedUser = null;
+    /** @type {{ connection: RTCPeerConnection, dataChannel: RTCDataChannel }} */
+    this.masterUser = null;
+    /** @type {{ id: string, connection: RTCPeerConnection, dataChannel: RTCDataChannel }[]} */
+    this.users = [];
     this.events = {};
   }
 
-  /** @returns {RTCPeerConnection} */
   createConnection() {
-    return new webkitRTCPeerConnection(
+    /** @type {RTCPeerConnection} */
+    const connection = new webkitRTCPeerConnection(
       { iceServers: [{ url: "stun:stun.1.google.com:19302" }] },
       { optional: [{ RtpDataChannels: true }] }
     );
-  }
 
-  setupConnection() {
-    this.connection.onicecandidate = (event) => {
+    connection.onicecandidate = (event) => {
       if (event.candidate) {
         gameSocket.emit("candidate", {
           userId: this.connectedUser || this.scene.masterUser,
@@ -30,20 +27,33 @@ class DirectConnection {
         });
       }
     };
-    this.connection.ondatachannel = (ev) => {
+    connection.ondatachannel = (ev) => {
       ev.channel.onmessage = (messageEvent) => {
         const { event, data } = JSON.parse(messageEvent.data);
         console.log("messageEvent", event, data);
         this.receiveEvent(event, data);
       };
     };
+
+    return connection;
   }
 
   connectToMasterUser() {
     console.log("connecting to the master user");
-    this.connection.createOffer().then((offer) => {
+    const connection = this.createConnection();
+
+    if (this.masterUser) {
+      this.masterUser.connection.close();
+    }
+
+    this.masterUser = {
+      connection,
+      dataChannel: this.createDataChannel(connection),
+    };
+
+    this.masterUser.connection.createOffer().then((offer) => {
       console.log("offer created", offer);
-      this.connection.setLocalDescription(offer);
+      this.masterUser.connection.setLocalDescription(offer);
       gameSocket.emit("offer", {
         userId: this.scene.masterUser,
         offer,
@@ -53,11 +63,15 @@ class DirectConnection {
 
   onOffer(userId, offer) {
     console.log("offer received, create answer");
-    this.connectedUser = userId;
-    this.connection.setRemoteDescription(new RTCSessionDescription(offer));
+    const connection = this.createConnection();
+    const dataChannel = this.createDataChannel(connection);
 
-    this.connection.createAnswer().then((answer) => {
-      this.connection.setLocalDescription(answer);
+    this.users.push({ id: userId, connection, dataChannel });
+
+    connection.setRemoteDescription(new RTCSessionDescription(offer));
+
+    connection.createAnswer().then((answer) => {
+      connection.setLocalDescription(answer);
 
       gameSocket.emit("answer", { userId, answer });
     });
@@ -65,19 +79,32 @@ class DirectConnection {
 
   onAnswer(answer) {
     console.log("answer received", answer);
-    this.connection.setRemoteDescription(new RTCSessionDescription(answer));
-  }
-
-  onCandidate(candidate) {
-    console.log("candidate received");
-    this.connection.addIceCandidate(new RTCIceCandidate(candidate));
-  }
-
-  createDataChannel() {
-    const dataChannel = this.connection.createDataChannel(
-      "masterUserDataChannel",
-      { reliable: true }
+    this.masterUser.connection.setRemoteDescription(
+      new RTCSessionDescription(answer)
     );
+  }
+
+  onCandidate(data) {
+    console.log("candidate received");
+
+    if (this.scene.player.isMaster()) {
+      const user = this.users.find((user) => user.id === data.userId);
+
+      if (user) {
+        user.connection.addIceCandidate(new RTCIceCandidate(data.candidate));
+      }
+    } else {
+      this.masterUser.connection.addIceCandidate(
+        new RTCIceCandidate(data.candidate)
+      );
+    }
+  }
+
+  /** @param connection {RTCPeerConnection} */
+  createDataChannel(connection) {
+    const dataChannel = connection.createDataChannel("masterUserDataChannel", {
+      reliable: true,
+    });
 
     dataChannel.onerror = (error) => {
       console.log("Error:", error);
@@ -100,12 +127,14 @@ class DirectConnection {
 
   sendToServer(event, data) {
     if (!this.scene.player.isMaster()) {
-      this.dataChannel.send(JSON.stringify({ event, data }));
+      this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
     }
   }
 
   sendToUsers(event, data) {
-    this.dataChannel.send(JSON.stringify({ event, data }));
+    this.users.forEach((user) => {
+      user.dataChannel.send(JSON.stringify({ event, data }));
+    });
   }
 
   on(event, callback) {

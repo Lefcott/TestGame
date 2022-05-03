@@ -36,7 +36,9 @@ gameSocket.on("connection", (socket) => {
 
   socket.on("candidate", (data) => {
     if (users.includes(data.userId)) {
-      gameSocket.to(data.userId).emit("candidate", data.candidate);
+      gameSocket
+        .to(data.userId)
+        .emit("candidate", { userId: socket.id, candidate: data.candidate });
     }
   });
 });
