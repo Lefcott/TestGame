@@ -13,7 +13,11 @@ class EventManager {
   }
 
   addEventListeners() {
-    gameSocket.on("playerJoined", this.handlePlayerCreated.bind(this));
+    // gameSocket.on("playerJoined", this.handlePlayerCreated.bind(this));
+    this.scene.directConnection.on(
+      "playerJoined",
+      this.handlePlayerCreated.bind(this)
+    );
     gameSocket.on("playerLeft", this.handlePlayerLeft.bind(this));
     gameSocket.on("playerUpdated", this.handlePlayerUpdated.bind(this));
     gameSocket.on("playerList", this.handlePlayerList.bind(this));

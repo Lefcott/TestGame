@@ -30,7 +30,6 @@ class DirectConnection {
     connection.ondatachannel = (ev) => {
       ev.channel.onmessage = (messageEvent) => {
         const { event, data } = JSON.parse(messageEvent.data);
-        console.log("messageEvent", event, data);
         this.receiveEvent(event, data);
       };
     };
@@ -64,9 +63,26 @@ class DirectConnection {
   onOffer(userId, offer) {
     console.log("offer received, create answer");
     const connection = this.createConnection();
-    const dataChannel = this.createDataChannel(connection);
+    const user = { id: userId, connection };
 
-    this.users.push({ id: userId, connection, dataChannel });
+    this.users.push(user);
+
+    user.dataChannel = this.createDataChannel(connection, () => {
+      this.sendToUser(userId, "playerJoined", {
+        id: gameSocket.id,
+        x: this.scene.player.x,
+        y: this.scene.player.y,
+        rotation: this.scene.player.rotation,
+        scale: this.scene.player.scale,
+      });
+      this.sendToUsers("playerJoined", {
+        id: userId,
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 0.6,
+      });
+    });
 
     connection.setRemoteDescription(new RTCSessionDescription(offer));
 
@@ -101,7 +117,8 @@ class DirectConnection {
   }
 
   /** @param connection {RTCPeerConnection} */
-  createDataChannel(connection) {
+  createDataChannel(connection, onOpen) {
+    console.log("creating data channel");
     const dataChannel = connection.createDataChannel("masterUserDataChannel", {
       reliable: true,
     });
@@ -120,6 +137,9 @@ class DirectConnection {
 
     dataChannel.onopen = () => {
       console.log("data channel", dataChannel);
+      if (onOpen) {
+        onOpen();
+      }
     };
 
     return dataChannel;
@@ -132,9 +152,15 @@ class DirectConnection {
   }
 
   sendToUsers(event, data) {
+    this.receiveEvent(event, data);
     this.users.forEach((user) => {
       user.dataChannel.send(JSON.stringify({ event, data }));
     });
+  }
+
+  sendToUser(userId, event, data) {
+    const user = this.users.find((user) => user.id === userId);
+    user.dataChannel.send(JSON.stringify({ event, data }));
   }
 
   on(event, callback) {
