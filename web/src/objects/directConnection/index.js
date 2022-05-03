@@ -1,5 +1,7 @@
 import MainScene from "../..";
 import gameSocket from "../../utils/socket";
+import MasterEvents from "./masterEvents";
+import UserEvents from "./userEvents";
 
 class DirectConnection {
   /** @param {MainScene} scene */
@@ -10,6 +12,8 @@ class DirectConnection {
     /** @type {{ id: string, connection: RTCPeerConnection, dataChannel: RTCDataChannel }[]} */
     this.users = [];
     this.events = {};
+    this.masterEvents = new MasterEvents(this.scene, this);
+    this.userEvents = new UserEvents(this.scene, this);
   }
 
   createConnection() {
@@ -145,9 +149,11 @@ class DirectConnection {
     return dataChannel;
   }
 
-  sendToServer(event, data) {
+  sendToMaster(event, data) {
     if (!this.scene.player.isMaster) {
       this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
+    } else {
+      this.receiveEvent(event, data);
     }
   }
 

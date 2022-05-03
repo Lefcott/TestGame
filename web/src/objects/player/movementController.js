@@ -1,5 +1,4 @@
 import Player from ".";
-import gameSocket from "../../utils/socket";
 
 class MovementController {
   /** @param {Player} player */
@@ -27,11 +26,11 @@ class MovementController {
       previousInput.s !== this.input.s ||
       previousInput.d !== this.input.d
     ) {
-      gameSocket.emit("inputUpdated", this.input);
-      this.player.scene.directConnection.sendToServer(
-        "inputUpdated",
-        this.input
-      );
+      // gameSocket.emit("inputUpdated", this.input);
+      this.player.scene.directConnection.sendToMaster("inputUpdated", {
+        userId: this.player.id,
+        input: this.input,
+      });
     }
   }
   isMoving() {

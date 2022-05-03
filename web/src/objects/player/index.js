@@ -1,4 +1,3 @@
-import { v4 as uuid } from "uuid";
 import MainScene from "../..";
 import MovementController from "./movementController";
 import RotationController from "./rotationController";

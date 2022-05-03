@@ -1,4 +1,5 @@
 import MainScene from "../..";
+import MovementController from "./movementController";
 
 class RemotePlayer extends Phaser.GameObjects.Sprite {
   /** @param {MainScene} scene */
@@ -9,9 +10,14 @@ class RemotePlayer extends Phaser.GameObjects.Sprite {
     this.scale = scale;
     this.rotation = rotation;
     this.scene.add.existing(this);
+    this.movementController = new MovementController(this);
   }
 
-  update() {}
+  update() {
+    if (this.scene.player.isMaster) {
+      this.movementController.update();
+    }
+  }
 
   setProperties(data) {
     this.x = data.x;

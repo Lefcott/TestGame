@@ -10,7 +10,7 @@ import Player from "./objects/player";
 import RemotePlayer from "./objects/remotePlayer";
 import Bullet from "./objects/bullet";
 import Ping from "./objects/ping";
-import DirectConnection from "./objects/eventManager/directConnection";
+import DirectConnection from "./objects/directConnection";
 
 class MainScene extends Phaser.Scene {
   constructor() {
@@ -27,6 +27,7 @@ class MainScene extends Phaser.Scene {
 
   create() {
     this.background = new Background(this);
+    this.directConnection = new DirectConnection(this);
     this.player = new Player(this);
     /** @type {RemotePlayer[]} */
     this.remotePlayers = [];
@@ -35,7 +36,6 @@ class MainScene extends Phaser.Scene {
     this.masterUser = "";
     this.gunSound = this.sound.add("gun");
     this.footstepsSound = this.sound.add("footsteps");
-    this.directConnection = new DirectConnection(this);
     this.eventListener = new EventManager(this);
     this.ping = new Ping(this);
     this.cameras.main.startFollow(this.player, false, 0.09, 0.09);
@@ -43,6 +43,7 @@ class MainScene extends Phaser.Scene {
 
   update() {
     this.player.update();
+    this.remotePlayers.forEach((player) => player.update());
   }
 
   removePlayer(id) {
