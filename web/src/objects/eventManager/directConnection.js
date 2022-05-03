@@ -98,7 +98,13 @@ class DirectConnection {
     return dataChannel;
   }
 
-  send(event, data) {
+  sendToServer(event, data) {
+    if (!this.scene.player.isMaster()) {
+      this.dataChannel.send(JSON.stringify({ event, data }));
+    }
+  }
+
+  sendToUsers(event, data) {
     this.dataChannel.send(JSON.stringify({ event, data }));
   }
 
