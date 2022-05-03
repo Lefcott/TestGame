@@ -22,15 +22,15 @@ class Player extends Phaser.GameObjects.Sprite {
     this.scene.add.existing(this);
   }
 
+  get isMaster() {
+    return this.scene.masterUser === this.id;
+  }
+
   setProperties(data) {
     this.x = data.x;
     this.y = data.y;
     this.rotation = data.rotation;
     this.scale = data.scale;
-  }
-
-  isMaster() {
-    return this.scene.masterUser === this.id;
   }
 
   update() {

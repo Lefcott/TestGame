@@ -103,7 +103,7 @@ class DirectConnection {
   onCandidate(data) {
     console.log("candidate received");
 
-    if (this.scene.player.isMaster()) {
+    if (this.scene.player.isMaster) {
       const user = this.users.find((user) => user.id === data.userId);
 
       if (user) {
@@ -146,7 +146,7 @@ class DirectConnection {
   }
 
   sendToServer(event, data) {
-    if (!this.scene.player.isMaster()) {
+    if (!this.scene.player.isMaster) {
       this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
     }
   }

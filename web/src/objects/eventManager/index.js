@@ -39,7 +39,7 @@ class EventManager {
 
   handleMasterUserUpdated(masterUser) {
     this.scene.masterUser = masterUser;
-    if (!this.scene.player.isMaster()) {
+    if (!this.scene.player.isMaster) {
       this.scene.directConnection.connectToMasterUser();
     }
   }
