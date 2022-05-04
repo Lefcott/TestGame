@@ -7,7 +7,6 @@ import footstepsSound from "./assets/sounds/footsteps.mp3";
 import Background from "./objects/background";
 import EventManager from "./objects/eventManager";
 import Player from "./objects/player";
-import RemotePlayer from "./objects/remotePlayer";
 import Bullet from "./objects/bullet";
 import Ping from "./objects/ping";
 import DirectConnection from "./objects/directConnection";
@@ -28,9 +27,9 @@ class MainScene extends Phaser.Scene {
   create() {
     this.background = new Background(this);
     this.directConnection = new DirectConnection(this);
-    this.player = new Player(this);
-    /** @type {RemotePlayer[]} */
-    this.remotePlayers = [];
+    this.activePlayer = new Player(this, null, true);
+    /** @type {Player[]} */
+    this.players = [this.activePlayer];
     /** @type {Bullet[]} */
     this.bullets = [];
     this.masterUser = "";
@@ -38,12 +37,11 @@ class MainScene extends Phaser.Scene {
     this.footstepsSound = this.sound.add("footsteps");
     this.eventListener = new EventManager(this);
     this.ping = new Ping(this);
-    this.cameras.main.startFollow(this.player, false, 0.09, 0.09);
+    this.cameras.main.startFollow(this.activePlayer, false, 0.09, 0.09);
   }
 
   update() {
-    this.player.update();
-    this.remotePlayers.forEach((player) => player.update());
+    this.players.forEach((player) => player.update());
   }
 
   removePlayer(id) {
@@ -51,14 +49,12 @@ class MainScene extends Phaser.Scene {
 
     if (player) {
       player.destroy();
-      this.remotePlayers = this.remotePlayers.filter(
-        (player) => player.id !== id
-      );
+      this.players = this.players.filter((player) => player.id !== id);
     }
   }
 
   getPlayerById(id) {
-    return this.remotePlayers.find((player) => player.id === id);
+    return this.players.find((player) => player.id === id);
   }
 }
 

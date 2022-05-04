@@ -14,12 +14,8 @@ class MasterEvents {
   }
 
   onInputUpdated(data) {
-    if (data.userId === this.scene.player.id) {
-      this.scene.player.movementController.input = data.input;
-    } else {
-      const player = this.scene.getPlayerById(data.userId);
-      player.movementController.input = data.input;
-    }
+    const player = this.scene.getPlayerById(data.userId);
+    player.movementController.input = data.input;
   }
 }
 

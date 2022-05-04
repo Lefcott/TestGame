@@ -73,11 +73,11 @@ class DirectConnection {
 
     user.dataChannel = this.createDataChannel(connection, () => {
       this.sendToUser(userId, "playerJoined", {
-        id: gameSocket.id,
-        x: this.scene.player.x,
-        y: this.scene.player.y,
-        rotation: this.scene.player.rotation,
-        scale: this.scene.player.scale,
+        id: this.scene.activePlayer.id,
+        x: this.scene.activePlayer.x,
+        y: this.scene.activePlayer.y,
+        rotation: this.scene.activePlayer.rotation,
+        scale: this.scene.activePlayer.scale,
       });
       this.sendToUsers("playerJoined", {
         id: userId,
@@ -107,7 +107,7 @@ class DirectConnection {
   onCandidate(data) {
     console.log("candidate received");
 
-    if (this.scene.player.isMaster) {
+    if (this.scene.activePlayer.isMaster) {
       const user = this.users.find((user) => user.id === data.userId);
 
       if (user) {
@@ -150,10 +150,10 @@ class DirectConnection {
   }
 
   sendToMaster(event, data) {
-    if (!this.scene.player.isMaster) {
-      this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
-    } else {
+    if (this.scene.activePlayer.isMaster) {
       this.receiveEvent(event, data);
+    } else {
+      this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
     }
   }
 

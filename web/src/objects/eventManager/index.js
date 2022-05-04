@@ -1,13 +1,12 @@
 import gameSocket from "../../utils/socket";
 import MainScene from "../..";
-import RemotePlayer from "../remotePlayer";
 import Bullet from "../bullet";
+import Player from "../player";
 
 class EventManager {
   /** @param {MainScene} scene */
   constructor(scene) {
     this.scene = scene;
-    this.scene.player.id = gameSocket.id;
     this.addEventListeners();
     gameSocket.connect();
   }
@@ -34,12 +33,12 @@ class EventManager {
   }
 
   handleConnection() {
-    this.scene.player.id = gameSocket.id;
+    this.scene.activePlayer.id = gameSocket.id;
   }
 
   handleMasterUserUpdated(masterUser) {
     this.scene.masterUser = masterUser;
-    if (!this.scene.player.isMaster) {
+    if (!this.scene.activePlayer.isMaster) {
       this.scene.directConnection.connectToMasterUser();
     }
   }
@@ -57,14 +56,14 @@ class EventManager {
   }
 
   handlePlayerList(data) {
-    data.forEach(this.addRemotePlayer.bind(this));
+    data.forEach(this.addPlayer.bind(this));
   }
 
   handlePlayerCreated(data) {
-    if (data.id === gameSocket.id) {
-      this.scene.player.setProperties(data);
+    if (data.id === this.scene.activePlayer.id) {
+      this.scene.activePlayer.setProperties(data);
     } else {
-      this.addRemotePlayer(data);
+      this.addPlayer(data);
     }
   }
 
@@ -73,18 +72,14 @@ class EventManager {
   }
 
   handlePlayerUpdated(data) {
-    if (data.id === gameSocket.id) {
-      this.scene.player.setProperties(data);
-    } else {
-      const remotePlayer = this.scene.getPlayerById(data.id);
-      remotePlayer.setProperties(data);
-    }
+    const player = this.scene.getPlayerById(data.id);
+    player.setProperties(data);
   }
 
   handlePlayerRotationUpdated(data) {
-    const remotePlayer = this.scene.getPlayerById(data.playerId);
-    if (remotePlayer) {
-      remotePlayer.rotation = data.rotation;
+    const player = this.scene.getPlayerById(data.playerId);
+    if (player) {
+      player.rotation = data.rotation;
     }
   }
 
@@ -94,17 +89,10 @@ class EventManager {
     );
   }
 
-  addRemotePlayer(data) {
-    this.scene.remotePlayers.push(
-      new RemotePlayer(
-        this.scene,
-        data.id,
-        data.scale,
-        data.rotation,
-        data.x,
-        data.y
-      )
-    );
+  addPlayer(data) {
+    const player = new Player(this.scene, data.id, false);
+    player.setProperties(data);
+    this.scene.players.push(player);
   }
 }
 

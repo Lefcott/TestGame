@@ -1,14 +1,22 @@
 import MainScene from "../..";
 import MovementController from "./movementController";
+import RotationController from "./rotationController";
+import FireController from "./fireController";
 
 class Player extends Phaser.GameObjects.Sprite {
   /** @param {MainScene} scene */
-  constructor(scene, id, isActive) {
-    super(scene, 0, 0, "player");
-    this.isActive = isActive;
-    this.id = id;
+  constructor(scene) {
+    super(
+      scene,
+      scene.game.canvas.width / 2,
+      scene.game.canvas.height / 2,
+      "player"
+    );
+    this.id = null;
     this.scene = scene;
     this.movementController = new MovementController(this);
+    this.rotationController = new RotationController(this);
+    this.fireController = new FireController(this);
     this.scale = 0.32;
     this.scene.add.existing(this);
   }
@@ -25,6 +33,7 @@ class Player extends Phaser.GameObjects.Sprite {
   }
 
   update() {
+    this.rotationController.update();
     this.movementController.update();
   }
 }

@@ -14,12 +14,8 @@ class UserEvents {
   }
 
   onPlayerUpdated(data) {
-    if (data.id === this.scene.player.id) {
-      this.scene.player.setProperties(data);
-    } else {
-      const player = this.scene.getPlayerById(data.id);
-      player.setProperties(data);
-    }
+    const player = this.scene.getPlayerById(data.id);
+    player.setProperties(data);
   }
 }
 
