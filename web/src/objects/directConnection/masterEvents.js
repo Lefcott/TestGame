@@ -11,12 +11,20 @@ class MasterEvents {
 
   defineEvents() {
     this.directConnection.on("inputUpdated", this.onInputUpdated.bind(this));
+    this.directConnection.on(
+      "updateRotation",
+      this.onUpdateRotation.bind(this)
+    );
     this.directConnection.on("ping", this.onPing.bind(this));
   }
 
   onInputUpdated(data) {
     const player = this.scene.getPlayerById(data.userId);
     player.movementController.input = data.input;
+  }
+
+  onUpdateRotation(data) {
+    this.directConnection.sendToUsers("rotationUpdated", data);
   }
 
   onPing(data) {

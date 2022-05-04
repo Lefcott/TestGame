@@ -152,7 +152,10 @@ class DirectConnection {
   sendToMaster(event, data) {
     if (this.scene.activePlayer.isMaster) {
       this.receiveEvent(event, data);
-    } else {
+    } else if (
+      this.masterUser &&
+      this.masterUser.dataChannel.readyState === "open"
+    ) {
       this.masterUser.dataChannel.send(JSON.stringify({ event, data }));
     }
   }
