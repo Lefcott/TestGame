@@ -72,12 +72,14 @@ class DirectConnection {
     this.users.push(user);
 
     user.dataChannel = this.createDataChannel(connection, () => {
-      this.sendToUser(userId, "playerJoined", {
-        id: this.scene.activePlayer.id,
-        x: this.scene.activePlayer.x,
-        y: this.scene.activePlayer.y,
-        rotation: this.scene.activePlayer.rotation,
-        scale: this.scene.activePlayer.scale,
+      this.scene.players.forEach((player) => {
+        this.sendToUser(userId, "playerJoined", {
+          id: player.id,
+          x: player.x,
+          y: player.y,
+          rotation: player.rotation,
+          scale: player.scale,
+        });
       });
       this.sendToUsers("playerJoined", {
         id: userId,
