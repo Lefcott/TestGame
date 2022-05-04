@@ -16,7 +16,7 @@ class DirectConnection {
     this.userEvents = new UserEvents(this.scene, this);
   }
 
-  createConnection() {
+  createConnection(userId) {
     /** @type {RTCPeerConnection} */
     const connection = new webkitRTCPeerConnection(
       { iceServers: [{ url: "stun:stun.1.google.com:19302" }] },
@@ -26,7 +26,7 @@ class DirectConnection {
     connection.onicecandidate = (event) => {
       if (event.candidate) {
         gameSocket.emit("candidate", {
-          userId: this.connectedUser || this.scene.masterUser,
+          userId,
           candidate: event.candidate,
         });
       }
@@ -43,7 +43,7 @@ class DirectConnection {
 
   connectToMasterUser() {
     console.log("connecting to the master user");
-    const connection = this.createConnection();
+    const connection = this.createConnection(this.scene.masterUser);
 
     if (this.masterUser) {
       this.masterUser.connection.close();
@@ -66,7 +66,7 @@ class DirectConnection {
 
   onOffer(userId, offer) {
     console.log("offer received, create answer");
-    const connection = this.createConnection();
+    const connection = this.createConnection(userId);
     const user = { id: userId, connection };
 
     this.users.push(user);
@@ -163,7 +163,9 @@ class DirectConnection {
   sendToUsers(event, data) {
     this.receiveEvent(event, data);
     this.users.forEach((user) => {
-      user.dataChannel.send(JSON.stringify({ event, data }));
+      if (user.dataChannel.readyState === "open") {
+        user.dataChannel.send(JSON.stringify({ event, data }));
+      }
     });
   }
 
