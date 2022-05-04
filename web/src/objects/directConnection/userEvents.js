@@ -11,11 +11,16 @@ class UserEvents {
 
   defineEvents() {
     this.directConnection.on("playerUpdated", this.onPlayerUpdated.bind(this));
+    this.directConnection.on("pong", this.onPong.bind(this));
   }
 
   onPlayerUpdated(data) {
     const player = this.scene.getPlayerById(data.id);
     player.setProperties(data);
+  }
+
+  onPong(data) {
+    this.scene.ping.updatePing(data.timestamp);
   }
 }
 

@@ -165,8 +165,10 @@ class DirectConnection {
   }
 
   sendToUser(userId, event, data) {
-    const user = this.users.find((user) => user.id === userId);
-    user.dataChannel.send(JSON.stringify({ event, data }));
+    if (userId !== this.scene.activePlayer.id) {
+      const user = this.users.find((user) => user.id === userId);
+      user.dataChannel.send(JSON.stringify({ event, data }));
+    }
   }
 
   on(event, callback) {
