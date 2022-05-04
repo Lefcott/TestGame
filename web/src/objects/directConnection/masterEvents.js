@@ -10,11 +10,12 @@ class MasterEvents {
   }
 
   defineEvents() {
-    this.directConnection.on("inputUpdated", this.onInputUpdated.bind(this));
+    this.directConnection.on("updateInput", this.onInputUpdated.bind(this));
     this.directConnection.on(
       "updateRotation",
       this.onUpdateRotation.bind(this)
     );
+    this.directConnection.on("createShot", this.onCreateShot.bind(this));
     this.directConnection.on("ping", this.onPing.bind(this));
   }
 
@@ -25,6 +26,10 @@ class MasterEvents {
 
   onUpdateRotation(data) {
     this.directConnection.sendToUsers("rotationUpdated", data);
+  }
+
+  onCreateShot(data) {
+    this.directConnection.sendToUsers("shotCreated", data);
   }
 
   onPing(data) {

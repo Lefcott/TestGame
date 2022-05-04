@@ -26,7 +26,7 @@ class MovementController {
       previousInput.s !== this.input.s ||
       previousInput.d !== this.input.d
     ) {
-      this.player.scene.directConnection.sendToMaster("inputUpdated", {
+      this.player.scene.directConnection.sendToMaster("updateInput", {
         userId: this.player.id,
         input: this.input,
       });

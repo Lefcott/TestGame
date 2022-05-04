@@ -1,5 +1,6 @@
 import DirectConnection from ".";
 import MainScene from "../..";
+import Bullet from "../bullet";
 
 class UserEvents {
   /** @param scene {MainScene} @param directConnection {DirectConnection} */
@@ -15,6 +16,7 @@ class UserEvents {
       "rotationUpdated",
       this.onRotationUpdated.bind(this)
     );
+    this.directConnection.on("shotCreated", this.onShotCreated.bind(this));
     this.directConnection.on("pong", this.onPong.bind(this));
   }
 
@@ -26,6 +28,10 @@ class UserEvents {
   onRotationUpdated(data) {
     const player = this.scene.getPlayerById(data.userId);
     player.setRotation(data.rotation);
+  }
+
+  onShotCreated(data) {
+    new Bullet(this.scene, data.id, data.x, data.y, data.direction);
   }
 
   onPong(data) {

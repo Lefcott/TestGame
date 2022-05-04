@@ -26,8 +26,7 @@ class MovementController {
       previousInput.s !== this.input.s ||
       previousInput.d !== this.input.d
     ) {
-      // gameSocket.emit("inputUpdated", this.input);
-      this.player.scene.directConnection.sendToMaster("inputUpdated", {
+      this.player.scene.directConnection.sendToMaster("updateInput", {
         userId: this.player.id,
         input: this.input,
       });

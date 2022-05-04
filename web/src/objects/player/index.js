@@ -1,4 +1,5 @@
 import MainScene from "../..";
+import FireController from "./fireController";
 import MovementController from "./movementController";
 import RotationController from "./rotationController";
 
@@ -11,6 +12,7 @@ class Player extends Phaser.GameObjects.Sprite {
     this.scene = scene;
     this.movementController = new MovementController(this);
     this.rotationController = new RotationController(this);
+    this.fireController = new FireController(this);
     this.scale = 0.32;
     this.scene.add.existing(this);
   }
